@@ -1,0 +1,34 @@
+#include <stdio.h>
+#include <stdlib.h>
+typedef int ElemType;
+typedef struct Node {
+    ElemType data;
+    struct Node *next;
+} Node;
+Node* createNode(ElemType e) {
+    Node *p = (Node*)malloc(sizeof(Node));//强制转换  保证单位一样 开辟空间
+    p->data = e;
+    p->next = NULL;
+    return p;
+}
+void pushFront(Node **head, ElemType e) {
+    Node *newNode = createNode(e);
+    newNode->next = *head;
+    *head = newNode;
+}
+void printList(Node *head) {
+    Node *p = head;
+    while (p) {
+        printf("%d ", p->data);
+        p = p->next;
+    }
+}
+int main() {
+    Node *head = NULL;
+    pushFront(&head, 30);
+    pushFront(&head, 20);
+    pushFront(&head, 10);
+    printList(head);
+    return 0;
+}
+//“逊哥带你学计算机”    我跟着他学习
