@@ -1,0 +1,16 @@
+#include <stdio.h>
+#include <math.h>
+int main() {
+    double x = 233.0;
+    double y = 666.0;
+    double R = sqrt(x * x + y * y);
+    printf("目标点(%.0f, %.0f)到原点的距离R = %.2f\n", x, y, R);
+    double alpha = atan2(y, x);
+    printf("目标点与x轴正方向的夹角α = %.4f 弧度（≈ %.2f 度）\n",
+           alpha, alpha * 180 / M_PI);
+    double min_distance = R * (1 + alpha);
+    printf("从原点到(%.0f, %.0f)的最短路径距离 = %.2f\n",
+           x, y, min_distance);
+    return 0;
+}
+//纯粹的数学  蓝桥杯
