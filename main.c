@@ -1,0 +1,20 @@
+#include <stdio.h>
+int main() {
+    int count = 0;
+    for (int a = 1; a <= 4; a++) {
+        for (int b = 1; b <= 4; b++) {
+            if (b == a)
+                continue;
+            for (int c = 1; c <= 4; c++) {
+                if (c == a || c == b)
+                    continue;
+                int num = a * 100 + b * 10 + c;
+                printf("%d ", num);
+                count++;
+            }
+        }
+    }
+    printf("\n总共有 %d 个这样的三位数\n", count);
+    return 0;
+}
+//在1-4中选三个组成  然后不能相同  有几个
