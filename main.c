@@ -1,0 +1,36 @@
+#include <stdio.h>
+#include <math.h>
+int main() {
+    long long n;
+    printf("请输入：");
+    scanf("%lld", &n);
+    printf("%lld = ", n);
+    int isprime = 1;
+    while (n % 2 == 0) {
+        if (!isprime)//分奇数与偶数 偶数就是2的变试
+            printf("*");
+        printf("2");
+        isprime = 0;
+        n /= 2;
+    }
+    for (long long i = 3; i <= sqrt(n); i += 2) {
+        while (n % i == 0) {//如果 n 有因数，必然一个 ≤√n，一个 ≥√n，所以只需试除到 √n 即可 类似于之前的素数 只需要有因数的就行
+            if (!isprime)
+                printf("*");
+            printf("%lld", i);
+            isprime = 0;
+            n /= i;
+            if (n == 1) break;//补充错误 主要是怕一个人输入1
+        }
+        if (n == 1) break;
+    }
+    if (n > 1) {//这个是 因为17之类的数字   除不尽
+        if (!isprime)
+            printf("*");
+        printf("%lld", n);
+    }
+
+    printf("\n");
+    return 0;
+}
+//这个是plus版本
