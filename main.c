@@ -1,0 +1,20 @@
+#include <stdio.h>
+
+int main() {
+    double height = 100.0; // 当前高度
+    double total = 100.0;  // 总路程（第一次下落先计入）
+    int times = 10;
+
+    // 循环计算第1~9次反弹的上升+下落路程
+    for (int i = 1; i < times; i++) {
+        height /= 2;        // 反弹高度 = 原高度/2
+        total += 2 * height;// 上升+下落，所以乘2
+    }
+
+    // 第10次反弹高度（此时height是第9次落地后反弹的高度，再/2就是第10次）
+    height /= 2;
+
+    printf("第10次落地时共经过：%.2f 米\n", total);
+    printf("第10次反弹高度：%.6f 米\n", height);
+    return 0;
+}
