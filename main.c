@@ -1,0 +1,13 @@
+#include <stdio.h>
+int main() {
+    double sum = 0;
+    double fact = 1;
+
+    for (int i = 1; i <= 20; i++) {
+        fact *= i;
+        sum += fact;
+    }
+    printf("%.0f\n", sum);
+    return 0;
+}
+//阶乘 
