@@ -1,0 +1,23 @@
+#include <stdio.h>
+int main() {
+    char str[100];
+    char stack[100];
+    int top = -1;
+
+    char delete;
+    printf("输入字符串：");
+    scanf("%s", str);
+    printf("删除字符：");
+    scanf(" %c", &delete);
+
+    for (int i = 0; str[i] != '\0'; i++) {
+        if (str[i] != delete) {
+            stack[++top] = str[i];
+        }
+    }//栈的思想  太好用
+
+    for (int i = 0; i <= top; i++) {
+        printf("%c", stack[i]);
+    }
+    return 0;
+}
