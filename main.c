@@ -1,0 +1,47 @@
+#include <stdio.h>
+int main() {
+    int M, N;
+    scanf("%d %d", &M, &N);
+    int words[10086];
+    for (int i = 0; i < N; i++) {
+        scanf("%d", &words[i]);
+    }
+    int count = 0;//计数
+
+    int n=0;//最开始 那个里面词典是0  所以后面会自动补充
+    int  memor[10086];
+
+    for (int i = 0; i < N; i++) {
+        int now = words[i];
+        int found = 0;//标记
+
+        for (int j = 0; j < M; j++) {
+            if (memor[j] == now) {
+                found = 1;
+                break;
+            }
+        }
+        if (found==0) {
+            count++;
+            if ( n< M) {
+                memor[n++] = now;
+            }// 内存满了的时候执行这里
+            else {
+                for (int j = 0; j < M-1; j++) {
+                    memor[j] = memor[j+1];
+                }
+                memor[M-1] = now;
+            }
+        }
+    }
+    printf("%d", count);
+    return 0;
+
+
+}
+/*内存容量 M，文章共 N 个单词（用数字表示）。
+依次处理每个单词：
+内存里有 → 不查词典
+内存里没有 → 查词典次数 + 1，加入内存
+内存满了 → 删掉最早进入的，再加新单词
+求：一共查多少次词典。*/
