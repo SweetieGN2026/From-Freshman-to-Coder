@@ -1,0 +1,236 @@
+#include<iostream>
+using namespace std;
+#define MaxSize 200
+typedef int ElemType;
+
+//======================== 顺序栈（王道模板 top初始=-1）========================
+/**
+ * 顺序栈结构体
+ * data[]：存放栈元素
+ * top：栈顶下标；S.top = -1 代表空栈；栈顶元素 S.data[S.top]
+*/
+typedef struct {
+    ElemType data[MaxSize];
+    int top;
+}SqStack;
+
+//初始化顺序栈
+void InitStack(SqStack& S) {
+    S.top=-1;
+}
+
+//判断栈是否为空
+bool StackEmpty(SqStack S) {
+    if (S.top==-1)
+        return true;
+    else
+        return false;
+}
+
+//入栈操作
+bool Push(SqStack&s,ElemType e) {
+    if (s.top==MaxSize-1)   //栈满，无法入栈
+        return false;
+    s.data[++s.top]=e;      //top先自增，存入元素
+    return true;
+}
+
+//出栈操作，e接收弹出的栈顶元素
+bool Pop(SqStack&s,ElemType&e) {
+    if (s.top==-1)          //栈空，无法出栈
+        return false;
+    e=s.data[s.top--];      //取出元素，top后自减
+    return true;
+}
+
+//读取栈顶元素（只获取，不弹出）
+bool GetTop(SqStack&s,ElemType&e) {
+    if (s.top==-1)
+        return false;
+    e=s.data[s.top];
+    return  true;
+}
+
+//====================== 循环顺序队列（牺牲一个位置区分空/满）======================
+/**
+ * data[]：队列存储数组
+ * front：队头指针；rear：队尾指针（指向待插入位置）
+*/
+typedef struct {
+    ElemType data[MaxSize];
+    int front ,rear;
+}SqQueue;
+
+//初始化循环队列
+void InitQueue(SqQueue&s) {
+    s.front =0,s.rear=0;
+}
+
+//判断队列是否为空
+bool QueueEmpty(SqQueue&s) {
+    if (s.front ==s.rear)
+        return true ;
+    else
+        return false;
+}
+
+//入队
+bool EnQueue(SqQueue&s,ElemType e) {
+    if ((s.rear+1)%MaxSize==s.front) //队满判定条件
+        return false;
+    s.data[s.rear]=e;
+    s.rear=(s.rear+1)%MaxSize;
+    return true;
+}
+
+//出队，e接收队头元素
+bool DeQueue(SqQueue&s,ElemType&e){
+    if (s.rear==s.front)    //队空
+        return false;
+    e=s.data[s.front];
+    s.front =(s.front+1)%MaxSize;
+    return true;
+}
+
+//======================== 链式队列（带头结点）========================
+//链队列结点
+typedef struct LinkNode {
+    ElemType data;
+    struct LinkNode *next;
+}LinkNode;
+
+//链队列封装结构，保存队头、队尾指针
+typedef struct {
+    LinkNode *front ,*rear;
+}LinkQueue;
+
+//初始化链式队列：创建头结点，初始队头队尾都指向头结点
+void InitQueue(LinkQueue&s) {
+    s.front=s.rear=(LinkNode*)malloc (sizeof(LinkNode));
+    s.front ->next=NULL;
+}
+
+//判断链队是否为空
+bool QueueEmpty(LinkQueue s) {
+    if (s.front ==s.rear )
+        return true;
+    else
+        return false;
+}
+
+//链队入队：尾部新增结点
+bool EnQueue(LinkQueue&s,ElemType e) {
+   LinkNode *p=(LinkNode*)malloc(sizeof(LinkNode));
+    p->data=e;
+    p->next=NULL;
+    s.rear->next=p;
+    s.rear=p;   //更新队尾指针
+    return true;
+}
+
+//链队出队：删除队头有效结点
+bool DeQueue(LinkQueue&s,ElemType&e){
+    if (s.rear==s.front)    //空队列
+        return false;
+    LinkNode * p = s.front->next;   //p指向第一个有效结点
+    e=p->data;
+    s.front->next =p->next;
+    //如果删除的是最后一个元素，rear需要复位到头结点，防止野指针
+    if (s.rear==p)
+        s.rear=s.front;
+    free(p);
+    return true;
+}
+
+//======================== 串结构 ========================
+/**
+ * SString：静态顺序串，【下标从1开始！王道标准】
+ * ch[0]弃置不用，ch[1]开始存放有效字符
+*/
+typedef  struct {
+    char  ch[MaxSize];
+    int length;
+}SString;
+
+//动态分配串（本套代码未使用，作为拓展了解）
+typedef struct {
+    char  *ch;
+    int length;
+};
+
+//======================== BF暴力模式匹配 ========================
+//s：主串，t：模式串；匹配成功返回起始下标，失败返回0
+int Index(SString s,SString t) {
+    int i=1,j=1;    //i主串指针，j模式串指针
+    while (i<=s.length&&j<=t.length) {
+        if (s.ch[i]==t.ch[j]) {
+            ++j,++i;                //字符匹配，双指针同时后移
+        }
+        else{
+            i=i-j+2;    //匹配失败：主串回溯，换到下一个起始位置
+            j=1;        //模式串从头重新匹配
+        }
+    }
+    if (j>t.length)
+        return i-t.length; //匹配完成，返回子串起始位置
+    else
+        return 0;          //查找失败
+}
+
+//======================== KMP：求解next数组 ========================
+//s：模式串，next[]输出跳转数组
+void GetNext(SString s,int next[]) {
+    int i=1,j=0;
+    next[1]=0;      //模式串第一位失配，规定next[1]=0
+    while (i<s.length) {
+        if (j==0||s.ch[i]==s.ch[j]) {
+            ++i,++j;
+            next[i]=j;
+        }
+        else
+            j=next[j];  //字符不相等，前缀指针按照next数组回溯
+    }
+}
+
+//======================== KMP匹配主函数 ========================
+//s主串 t模式串 next数组由GetNext提前生成
+int  GetKMP(SString s,SString t,int next[]) {
+    int i=1,j=1;
+    while (i<=s.length &&j<=t.length ) {
+        if (j==0||s.ch[i]==t.ch[j]) {
+            ++i,++j;
+        }
+        else
+            j=next[j]; //失配：主串i不回退，模式串j跳转
+    }
+    if (j>t.length)
+        return i-t.length;
+    else
+        return 0;
+}
+
+//======================== KMP优化：求解nextval修正数组 ========================
+void Getnextval(SString s,int nextval[]) {
+    int i=1,j=0;
+    nextval[1]=0;
+    while (i<s.length) {
+        if (j==0||s.ch[i]==s.ch[j]) {
+            ++i,++j;
+            //nextval核心优化：消除重复字符无效跳转
+            if (s.ch[i]!=s.ch[j])
+                nextval[i]=j;
+            else
+                nextval[i]=nextval[j];
+        }
+        else
+            j=nextval[j];
+    }
+}
+/*这里是 王道41--130  代码是手写 注释为ai
+复习重点汇总：
+1.顺序栈 top=-1；循环队列牺牲一位判满；链队列带头结点
+2.串全部采用【下标从1开始】，适配王道教材
+3.Index：BF暴力匹配；GetNext+GetKMP标准KMP
+4.Getnextval：next数组优化版本，匹配函数代码无需改动，直接替换数组传入
+5.所有函数bool返回值：true操作成功，false操作失败
+*/
