@@ -1,0 +1,17 @@
+#include <stdio.h>
+double fibfrancant(int n) {
+    if (n == 1)
+        return 2.0 / 1;
+    if (n == 2)
+        return 3.0 / 2;
+    return fibfrancant(n - 1) + fibfrancant(n - 2);//递归真的方便
+}
+double sum(int n) {
+    if (n == 0)
+        return 0;
+    return sum(n - 1) + fibfrancant(n);
+}
+int main() {
+    printf("前20项之和 = %.30f\n", sum(20));
+    return 0;
+}

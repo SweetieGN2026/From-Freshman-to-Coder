@@ -1,0 +1,20 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+int main() {
+    srand((unsigned int)time(NULL));  // 随机数种子，保证每次数字不同
+    int ans = rand() % 100 + 1;       // 生成1-100随机答案
+    int guess, n = 0;                 // guess：玩家输入数  n：猜测次数
+    while (1) {//始终运行 直到成功
+        printf("猜1-100的数：");
+        scanf("%d", &guess);
+        n++;
+        if (guess > ans) printf("大了\n");
+        else if (guess < ans) printf("小了\n");
+        else {
+            printf("猜对了！共猜%d次\n", n);
+            break;
+        }
+    }
+    return 0;
+}

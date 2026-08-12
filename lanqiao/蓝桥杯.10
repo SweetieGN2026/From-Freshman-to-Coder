@@ -1,0 +1,58 @@
+
+#include <stdio.h>
+#define MAXN 100005
+
+int h[MAXN], w[MAXN];
+int n, k;
+
+// 计算边长 x 够不够分
+int count(int x) {
+    long long sum = 0;
+    for (int i = 0; i < n; i++) {
+        sum += (h[i] / x) * (w[i] / x);
+
+        if (sum >= k) return 1;
+    }
+    return sum >= k;
+}
+
+int main() {
+    scanf("%d%d", &n, &k);
+    for (int i = 0; i < n; i++) {
+        scanf("%d%d", &h[i], &w[i]);
+    }
+    int l = 1, r = 100000;
+    int ans = 1;
+
+    while (l <= r) {
+        int mid = (l + r) / 2;
+
+        if (count(mid)) {
+            ans = mid;
+            l = mid + 1;
+        } else {
+            r = mid - 1;
+        }
+    }
+
+    printf("%d\n", ans);
+    return 0;
+}
+/*儿童节有 K 位小朋友，小明有 N 块长方形巧克力，第 i 块是 Hi​×Wi​。要切出 K 块大小相同的正方形巧克力，边长为整数。求能切出来的最大正方形边长。*/
+/*二分范围
+
+左边界：最小边长 l = 1
+右边界：最大可能边长 r = 1e5
+
+
+取中间值 midmid = (l + r) / 2，当作当前尝试的边长。
+
+判断是否够分对每块巧克力：能切数量所有巧克力总和 ≥ K → 够分
+
+调整二分区间
+
+够分 → 记录答案，尝试更大：l = mid + 1
+不够分 → 边长太大，尝试更小：r = mid - 1
+
+
+最终 ans 就是最大可行边长*/

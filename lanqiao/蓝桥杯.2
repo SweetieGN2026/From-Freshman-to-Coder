@@ -1,0 +1,38 @@
+#include <stdio.h>
+#include <string.h>
+
+#define MAXV 20010
+
+int dp[MAXV];
+int main() {
+    int N, V;
+    scanf("%d%d", &N, &V);
+
+    for (int i = 0; i < N; i++) {
+        int v, w, s;
+        scanf("%d%d%d", &v, &w, &s);
+
+        int k = 1;
+        while (s > 0) {
+            int take = (k < s) ? k : s;
+            int tv = take * v;
+            int tw = take * w;
+            for (int j = V; j >= tv; j--) {
+                if (dp[j] < dp[j - tv] + tw)
+                {
+                    dp[j] = dp[j - tv] + tw;
+                }
+            }
+
+            s -= take;
+            k *= 2;
+        }
+    }
+
+    printf("%d\n", dp[V]);
+    return 0;
+}
+/*有 N 种物品，背包容量 V。
+每种物品：体积 v，价值 w，数量 s。
+每种物品最多选 s 件，总体积不超 V，求最大价值。
+*/

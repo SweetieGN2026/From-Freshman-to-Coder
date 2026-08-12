@@ -1,0 +1,19 @@
+#include <stdio.h>
+long long fib(int n) {
+
+    if (n == 1 || n == 2) {
+        return 1;//数学定义
+    }
+    return fib(n - 1) + fib(n - 2);  //因为n在>=2时才能计算  所以加前一个和后面一个
+}
+
+int main() {
+    int month;
+    printf("输出前40个月兔子总数:\n");
+    for (month = 1; month <= 40; month++) {
+        printf("第%d个月: %lld\n", month, fib(month));
+    }
+
+    return 0;
+
+}                       
